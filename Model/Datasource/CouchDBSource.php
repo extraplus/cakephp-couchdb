@@ -111,7 +111,7 @@ class CouchDBSource extends DataSource {
 		foreach ($config as $key => $value) {
 			if (isset($translateConfig[$key])) {
 				$translatedConfig = Set::insert($translatedConfig, $translateConfig[$key], $value);
-				unset($config[$key]);
+				//unset($config[$key]);
 			}
 		}
 		$this->config = array_replace_recursive($this->_baseconfig, $this->config, $config, $translatedConfig);
