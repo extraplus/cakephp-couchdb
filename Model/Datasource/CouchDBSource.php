@@ -444,7 +444,10 @@ class CouchDBSource extends DataSource {
  * @see http://wiki.apache.org/couchdb/HTTP_Document_API#PUT
  */
 	public function create(Model $model, $fields = null, $values = null) {
-		$data = $model->data;
+		$data = isset($model->data[$model->alias]) ? $model->data[$model->alias] : $model->data;
+CakeLog::write('debug','CREATE Model data ' . json_encode($data));
+CakeLog::write('debug','CREATE Fields ' . json_encode($fields));
+CakeLog::write('debug','CREATE Values ' . json_encode($values));
 
 		if ($fields !== null && $values !== null) {
 			$data = array_combine($fields, $values);
@@ -469,6 +472,7 @@ class CouchDBSource extends DataSource {
 		}
 
 		$url = '/'. $this->getDB($model->database) . '/' . $id;
+CakeLog::write('debug','PUT ' . $url);
 		$response = $this->query($url, 'put', array(), $data);
 
 		if (!isset($response['body']['ok']) || $response['body']['ok'] !== true) {
@@ -526,6 +530,7 @@ class CouchDBSource extends DataSource {
 			}
 		}
 
+CakeLog::write('debug','GET ' . $url);
 		$response = $this->query($url, 'get', $params);
 
 		if ($this->_isError($response['errors'])) {
