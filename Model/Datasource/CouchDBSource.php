@@ -263,10 +263,13 @@ class CouchDBSource extends DataSource {
  * @todo remove switch, validate method against an array and use request on all
  */
 	public function query($url, $method = 'get', $query = array(), $data = array()) {
+CakeLog::write('debug',$method . ' ' . $url );
+CakeLog::write('debug',json_encode($data) );
+
 		$t = microtime(true);
 		$data = json_encode($data);
 
-		switch ($method) {
+		switch (strtolower($method)) {
 			case 'post':
 				$response = $this->Socket->post($url, $data);
 				break;
@@ -312,6 +315,10 @@ class CouchDBSource extends DataSource {
 
 			throw new CakeException($this->_errorString($errors));
 		}
+
+CakeLog::write('debug',$method . ' ' . $url);
+CakeLog::write('debug','result: ' . json_encode($result));
+CakeLog::write('debug','errors: ' . json_encode($errors));
 
 		return array('body' => $result, 'errors' => $errors, 'headers' => $response->headers);
 	}
@@ -574,6 +581,7 @@ CakeLog::write('debug','GET ' . $url);
  * @see DataSource::update()
  */
   public function update(Model $model, $fields = null, $values = null, $conditions = array()) {
+CakeLog::write('debug','UPDATE ' . $model->alias);
 		if ($values === null) {
 			$data = $fields;
 		} else {
